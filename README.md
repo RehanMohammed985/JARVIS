@@ -1,6 +1,6 @@
 # JARVIS (Joint Assistant for Research, Voice, Interaction, and Scripting)
 
-Jarvis is a local voice (or text-based) assistant built in Python for macOS. It uses OpenAI’s GPT models to interpret natural language commands and perform useful tasks such as answering questions, opening apps, and creating files — all from your terminal.
+Jarvis is a local voice  assistant built in Python for macOS. It uses OpenAI’s GPT models to interpret natural language commands and perform useful tasks such as answering questions, opening apps, and creating files — all from your terminal. Yes the inspo is from Iron Man
 
 ---
 
