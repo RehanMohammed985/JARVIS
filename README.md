@@ -1,4 +1,4 @@
-# JARVIS
+# JARVIS (Joint Assistant for Research, Voice, Interaction, and Scripting)
 
 A local voice assistant for Mac that uses OpenAI’s GPT models to answer questions, open apps, create files/projects, and perform tasks — all running locally.
 
