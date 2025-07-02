@@ -6,7 +6,7 @@ Jarvis is a local voice  assistant built in Python for macOS. It uses OpenAI’s
 
 ## ✨ Features
 
-- 🔊 Optional voice interaction (uses speech recognition and text-to-speech)
+- 🔊 Voicd interaction (uses speech recognition and text-to-speech)
 - 🧠 Connects to OpenAI’s Chat API (GPT-3.5 / GPT-4)
 - ⚙️ Executes system-level commands (open apps, create files, etc.)
 - 🔁 Easily extendable to support other LLMs like Cohere
