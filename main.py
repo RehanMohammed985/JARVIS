@@ -3,6 +3,7 @@ import openai
 import speech_recognition as sr
 import pyttsx3
 from dotenv import load_dotenv
+import subprocess
 
 # Load your OpenAI API key from the .env file
 load_dotenv()
@@ -33,7 +34,45 @@ def ask_gpt(prompt):
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
-    return response.choices[0].message.content
+    return response.choices[0].message.content.strip()
+
+def create_file(filename, content):
+    try:
+        with open(filename, 'w') as f:
+            f.write(content)
+        return f"File '{filename}' created successfully."
+    except Exception as e:
+        return f"Failed to create file: {e}"
+
+def open_file(filename):
+    try:
+        filepath = os.path.abspath(filename)
+        subprocess.run(['open', filepath])  # 'open' for MacOS, use 'xdg-open' for Linux, or 'start' for Windows
+        return f"Opened file '{filename}'."
+    except Exception as e:
+        return f"Failed to open file: {e}"
+
+def handle_command(command):
+    command_lower = command.lower()
+
+    if "create a file named" in command_lower and "with content" in command_lower:
+        try:
+            parts = command_lower.split("create a file named")[1].split("with content")
+            filename = parts[0].strip().replace(" ", "_")
+            content = parts[1].strip()
+            return create_file(filename, content)
+        except Exception as e:
+            return f"Couldn't parse the create file command: {e}"
+
+    elif "open the file" in command_lower:
+        try:
+            filename = command_lower.split("open the file")[1].strip().replace(" ", "_")
+            return open_file(filename)
+        except Exception as e:
+            return f"Couldn't parse the open file command: {e}"
+
+    else:
+        return ask_gpt(command)
 
 if __name__ == "__main__":
     print("Jarvis is ready. Say something!")
@@ -42,6 +81,6 @@ if __name__ == "__main__":
         if command.lower() in ["exit", "quit", "stop"]:
             print("Goodbye!")
             break
-        response = ask_gpt(command)
+        response = handle_command(command)
         print(f"Jarvis: {response}")
         speak(response)
