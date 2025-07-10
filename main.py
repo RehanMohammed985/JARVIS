@@ -47,7 +47,7 @@ def create_file(filename, content):
 def open_file(filename):
     try:
         filepath = os.path.abspath(filename)
-        subprocess.run(['open', filepath])  # 'open' for MacOS, use 'xdg-open' for Linux, or 'start' for Windows
+        subprocess.run(['open', filepath])  
         return f"Opened file '{filename}'."
     except Exception as e:
         return f"Failed to open file: {e}"
