@@ -4,8 +4,9 @@ import speech_recognition as sr
 import pyttsx3
 from dotenv import load_dotenv
 import subprocess
+import json
 
-# Load your OpenAI API key from the .env file
+# Load OpenAI API key from .env
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -29,9 +30,26 @@ def listen():
     except sr.RequestError:
         return "Sorry, there was a problem with the speech recognition service."
 
+def listen_for_wake_word(wake_word="jarvis"):
+    while True:
+        print("Listening for wake word...")
+        with sr.Microphone() as source:
+            audio = recognizer.listen(source)
+        try:
+            phrase = recognizer.recognize_google(audio).lower()
+            print(f"Heard: {phrase}")
+            if wake_word in phrase:
+                speak("Yes?")
+                return
+        except sr.UnknownValueError:
+            continue
+        except sr.RequestError:
+            print("Speech recognition error.")
+            continue
+
 def ask_gpt(prompt):
     response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content.strip()
@@ -47,39 +65,57 @@ def create_file(filename, content):
 def open_file(filename):
     try:
         filepath = os.path.abspath(filename)
-        subprocess.run(['open', filepath])  
+        subprocess.run(['open', filepath])  # macOS only; adjust for other OSes
         return f"Opened file '{filename}'."
     except Exception as e:
         return f"Failed to open file: {e}"
 
 def handle_command(command):
-    command_lower = command.lower()
+    system_prompt = """
+    You are a smart assistant that converts natural language voice commands into structured Python actions.
+    Available actions: create_file, open_file, ask_gpt
+    For create_file: include 'filename' and 'content'
+    For open_file: include 'filename'
+    If the command doesn't match any action, fallback to ask_gpt.
+    Respond in pure JSON only, no explanations.
+    Example:
+    {
+      "action": "create_file",
+      "filename": "notes.txt",
+      "content": "Remember to call mom."
+    }
+    """
 
-    if "create a file named" in command_lower and "with content" in command_lower:
-        try:
-            parts = command_lower.split("create a file named")[1].split("with content")
-            filename = parts[0].strip().replace(" ", "_")
-            content = parts[1].strip()
-            return create_file(filename, content)
-        except Exception as e:
-            return f"Couldn't parse the create file command: {e}"
+    try:
+        gpt_response = openai.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": command}
+            ]
+        )
+        parsed = json.loads(gpt_response.choices[0].message.content)
+        action = parsed.get("action")
 
-    elif "open the file" in command_lower:
-        try:
-            filename = command_lower.split("open the file")[1].strip().replace(" ", "_")
-            return open_file(filename)
-        except Exception as e:
-            return f"Couldn't parse the open file command: {e}"
+        if action == "create_file":
+            return create_file(parsed["filename"], parsed["content"])
+        elif action == "open_file":
+            return open_file(parsed["filename"])
+        else:
+            return ask_gpt(command)
 
-    else:
+    except Exception as e:
+        print("Error handling command:", e)
         return ask_gpt(command)
 
 if __name__ == "__main__":
-    print("Jarvis is ready. Say something!")
+    print("Jarvis is always listening... Say 'Jarvis' to begin.")
     while True:
+        listen_for_wake_word("jarvis")
         command = listen()
         if command.lower() in ["exit", "quit", "stop"]:
             print("Goodbye!")
+            speak("Goodbye!")
             break
         response = handle_command(command)
         print(f"Jarvis: {response}")
