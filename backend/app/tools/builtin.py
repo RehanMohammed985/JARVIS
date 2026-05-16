@@ -11,7 +11,7 @@ from app.config import settings
 from app.macos_open import macos_open_application
 from app.plugins.registry import load_plugin_tools
 from app.memory.store import get_memory_store
-from app.security.permissions import PermissionError, is_terminal_command_allowed, resolve_under_roots
+from app.security.permissions import PolicyError, is_terminal_command_allowed, resolve_under_roots
 from app.tools.file_search_tool import mac_finder_tools
 from app.tools.filesystem_extra import find_and_open_file, open_path, search_files_by_keyword, show_in_finder
 from app.tools.host_filesystem_ops import (
@@ -106,7 +106,7 @@ def list_directory(
     record_tool_activity("list_directory", {"path": path, "max_entries": max_entries})
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         return (
             f"Denied: {e}. Use filesystem_overview to see allowed roots, "
             "or extend JARVIS_ALLOWED_ROOTS."
@@ -153,7 +153,7 @@ def find_files(
         return "Use one * wildcard per segment (e.g. *resume*) — not **."
     try:
         base = resolve_under_roots(root_path)
-    except PermissionError as e:
+    except PolicyError as e:
         return f"Denied: {e}"
     if not base.is_dir():
         return f"Search root is not a directory: {base}"
@@ -179,7 +179,7 @@ def read_file(path: Annotated[str, "Path under allowed dirs; use only when user 
     record_tool_activity("read_file", {"path": path})
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         return (
             f"Denied: {e}. Ask the user for a path under their allowed folders, "
             "or they can set JARVIS_ALLOWED_ROOTS."
@@ -201,7 +201,7 @@ def write_file(
     record_tool_activity("write_file", {"path": path})
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         return f"Denied: {e}"
     try:
         p.parent.mkdir(parents=True, exist_ok=True)

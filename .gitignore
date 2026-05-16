@@ -1,28 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
 venv/
-data/
 
+# Node
+node_modules/
+.next/
+
+# Env
 .env
 .env.local
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+
+# macOS
 .DS_Store
 
-backend/.venv/
-backend/data/
-backend/**/__pycache__/
+# Logs
+*.log
 
-frontend/node_modules/
-frontend/.next/
-frontend/out/
+# Ollama / models
+models/
+*.bin
+*.gguf
 
-*.wav
-*.aiff
-!assets/.gitkeep
+# Build
+dist/
+build/
 
-# Large model checkpoints (keep out of git)
-*.pth
-*.index
-*.onnx
+# IDE
+.vscode/
+.idea/
+
+# Cache
+.cache/

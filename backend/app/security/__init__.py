@@ -1,7 +1,7 @@
-from app.security.permissions import PermissionError, is_terminal_command_allowed, resolve_under_roots
+from app.security.permissions import PolicyError, is_terminal_command_allowed, resolve_under_roots
 
 __all__ = [
-    "PermissionError",
+    "PolicyError",
     "is_terminal_command_allowed",
     "resolve_under_roots",
 ]

@@ -9,7 +9,7 @@ from typing import Annotated, Any
 from langchain_core.tools import tool
 
 from app.macos_open import macos_open_app_with_path
-from app.security.permissions import PermissionError, is_path_under_allowed_roots, resolve_under_roots
+from app.security.permissions import PolicyError, is_path_under_allowed_roots, resolve_under_roots
 from app.tools.filesystem_extra import _open_existing_allowed_path, keyword_search_paths
 from app.voice.session_context import current_voice_session
 from app.voice.tool_telemetry import record_tool_activity
@@ -49,7 +49,7 @@ def move_path(
     try:
         src = resolve_under_roots(source)
         dst = resolve_under_roots(destination)
-    except PermissionError as e:
+    except PolicyError as e:
         _emit("error", str(e))
         return f"Denied: {e}"
     if not src.exists():
@@ -79,7 +79,7 @@ def copy_path(
     try:
         src = resolve_under_roots(source)
         dst = resolve_under_roots(destination)
-    except PermissionError as e:
+    except PolicyError as e:
         _emit("error", str(e))
         return f"Denied: {e}"
     if not src.exists():
@@ -109,7 +109,7 @@ def rename_in_place(
     _emit("start", "Rename: resolving…", path=path)
     try:
         src = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         _emit("error", str(e))
         return f"Denied: {e}"
     if not src.exists():
@@ -191,7 +191,7 @@ def open_workspace_in_cursor(
     _emit("start", "Opening folder in Cursor…", path=path)
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         _emit("error", str(e))
         return f"Denied: {e}"
     if not p.exists():

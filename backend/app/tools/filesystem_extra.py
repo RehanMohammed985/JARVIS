@@ -14,7 +14,7 @@ from langchain_core.tools import tool
 from app.config import settings
 from app.macos_open import macos_open_path
 from app.security.permissions import (
-    PermissionError,
+    PolicyError,
     is_path_under_allowed_roots,
     resolve_under_roots,
 )
@@ -635,7 +635,7 @@ def open_path(
     )
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         return f"Denied: {e}"
     if not p.exists():
         return f"Path does not exist: {p}"
@@ -653,7 +653,7 @@ def show_in_finder(
     record_tool_activity("show_in_finder", {"path": path})
     try:
         p = resolve_under_roots(path)
-    except PermissionError as e:
+    except PolicyError as e:
         return f"Denied: {e}"
     if not p.exists():
         return f"Path does not exist: {p}"

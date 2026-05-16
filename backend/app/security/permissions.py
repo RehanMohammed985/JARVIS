@@ -5,7 +5,7 @@ from pathlib import Path
 from app.config import settings
 
 
-class PermissionError(Exception):
+class PolicyError(Exception):
     """Raised when a path or command is outside allowed policy."""
 
 
@@ -67,11 +67,11 @@ def resolve_under_roots(path: str | Path) -> Path:
             except ValueError:
                 continue
     if settings.full_filesystem_access:
-        raise PermissionError(
+        raise PolicyError(
             f"{path} (outside accessible paths, blocked location, or path could not be resolved)"
         )
     roots_hint = ", ".join(str(r) for r in settings.allowed_root_paths)
-    raise PermissionError(f"{path} (not under allowed roots: {roots_hint})")
+    raise PolicyError(f"{path} (not under allowed roots: {roots_hint})")
 
 
 def is_path_under_allowed_roots(path: str | Path) -> bool:
