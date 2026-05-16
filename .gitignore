@@ -31,5 +31,9 @@ build/
 .vscode/
 .idea/
 
+# Vercel — not used (local-only UI). Ignore CLI link/deploy artifacts.
+.vercel/
+vercel.json
+
 # Cache
 .cache/

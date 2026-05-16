@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+// Local Next.js only (`npm run dev` / `npm run build && npm run start` on localhost).
+// No Vercel adapter, edge runtime, or deployment-specific settings.
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config, { dev }) => {

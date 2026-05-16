@@ -204,6 +204,10 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+### Local-only — no Vercel
+
+This frontend is intended to run on **your machine** (`npm run dev` → `http://localhost:3000`) with the API on **`127.0.0.1`**. The repo ships **no** Vercel project config: no `vercel.json`, no Vercel Analytics/Speed Insights, and no assumption of a preview or production deployment URL. The WebSocket and optional `NEXT_PUBLIC_*` overrides target **local** services only. If you run the Vercel CLI in this folder, treat `.vercel/` and any `vercel.json` as accidental — they are **gitignored** and unsupported here.
+
 ---
 
 ## Docker (Ollama)
