@@ -95,7 +95,7 @@ The HUD and `GET http://127.0.0.1:8000/health/macos` **re-run probes at runtime*
 2. **Faster-Whisper** transcribes audio; **wake-word** gating optional (`wake_mode`).
 3. **LangGraph** ReAct agent calls **Ollama** and **tools** (filesystem, terminal allowlist, apps, web, memory, email/calendar stubs).
 4. **ChromaDB** stores/recalls long-term context via **Ollama `nomic-embed-text`** (pull separately).
-5. **TTS** synthesizes speech; browser plays returned **WAV** while the **orb** enters `speaking`.
+5. **TTS** synthesizes speech and the local browser plays returned **WAV** while the **orb** enters `speaking`.
 
 ---
 
