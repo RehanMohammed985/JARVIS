@@ -1,0 +1,36 @@
+# Jarvis docker-compose: optional services only (e.g. Ollama).
+#
+# The Jarvis FastAPI backend MUST run natively on macOS (Terminal / Cursor + host Python)
+# for real Finder, AppleScript, `open`, and ~/. See scripts/run_backend_native_macos.sh
+#
+# Do NOT run the FastAPI/LangGraph Jarvis backend in this file for normal macOS use:
+# Finder, AppleScript, native `open`, Spotlight, and real ~/ paths are only correct when
+# uvicorn runs natively on the Mac. Mount host paths explicitly only if you know what you're doing.
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Uncomment for NVIDIA Linux hosts:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # Optional: hosted vector DB if you prefer Qdrant over embedded Chroma.
+  # qdrant:
+  #   image: qdrant/qdrant:latest
+  #   ports:
+  #     - "6333:6333"
+  #   volumes:
+  #     - qdrant_data:/qdrant/storage
+
+volumes:
+  ollama_data: {}
+  # qdrant_data: {}

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Voice-first Jarvis: starts API + HUD if needed, listens for "jarvis", opens browser.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY="${ROOT}/backend/.venv/bin/python"
+if [[ ! -x "$PY" ]]; then
+  echo "Create the backend venv first: cd backend && python3 -m venv .venv && pip install -r requirements.txt" >&2
+  exit 1
+fi
+exec "$PY" "$ROOT/scripts/jarvis_voice_launcher.py" "$@"
